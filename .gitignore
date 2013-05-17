@@ -1,6 +1,7 @@
 # ignore bundler state and gems
 .bundle/
 vendor/bundle/
+vendor/binstubs/
 
 # by default, exclude all cookbooks
 /cookbooks/*/
