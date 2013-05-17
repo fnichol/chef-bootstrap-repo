@@ -1,9 +1,9 @@
-source "http://rubygems.org"
+source "https://rubygems.org"
 
 # for knife and gang
 gem 'chef'
 # for fetching and resolving cookbooks
-gem 'librarian'
+gem 'berkshelf'
 # for mapping out your infrastructure
 gem 'spiceweasel'
 
