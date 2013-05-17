@@ -50,7 +50,7 @@ done
 
 # run each resulting knife command output by spiceweasel,
 # unless in dry run mode
-spiceweasel --extractlocal "$yaml" | while read knife_command ; do
+spiceweasel --extractlocal | while read knife_command ; do
   if [[ -n "$DRY_RUN" ]] ; then
     printf "$knife_command\n"
   else
