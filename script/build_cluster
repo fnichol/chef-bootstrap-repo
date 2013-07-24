@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #^syntax detection
 set -e
+[ -n "$BUILD_CLUSTER_DEBUG" ] && set -x
 
 ### Functions
 
@@ -37,7 +38,7 @@ while [[ $# -gt 0 ]] ; do
   VERBOSE=1
   ;;
 --tmux|-t)
-  TMUX=1
+  RUN_IN_TMUX=1
   ;;
 --help|--usage)
   usage
@@ -55,7 +56,11 @@ if [[ -z "$CLUSTER" ]] ; then
   exit 1
 fi
 
-cluster_yml="$(dirname $0)/../clusters/${CLUSTER}.yml"
+if [[ -f "$CLUSTER" ]] ; then
+  cluster_yml="$CLUSTER"
+else
+  cluster_yml="$(dirname $0)/../clusters/${CLUSTER}.yml"
+fi
 
 ### Perform the Work
 
@@ -95,7 +100,7 @@ in_tmux() {
   TMPDIR=/tmp tmux attach-session -t $CLUSTER
 }
 
-if [[ -n "$TMUX" ]] ; then
+if [[ -n "$RUN_IN_TMUX" ]] ; then
   in_tmux
 else
   time (in_serial)
