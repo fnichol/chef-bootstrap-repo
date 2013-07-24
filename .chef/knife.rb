@@ -69,6 +69,17 @@ if ENV['BLUEBOX_CUSTOMER_ID'] && ENV['BLUEBOX_API_KEY']
   knife[:bluebox_api_key]     = ENV['BLUEBOX_API_KEY']
 end
 
+# digital ocean configuration
+if ENV['DIGITAL_OCEAN_CLIENT_ID'] && ENV['DIGITAL_OCEAN_API_KEY']
+  knife[:digital_ocean_client_id] = ENV['DIGITAL_OCEAN_CLIENT_ID']
+  knife[:digital_ocean_api_key]   = ENV['DIGITAL_OCEAN_API_KEY']
+end
+
+# linode configuration
+if ENV['LINODE_API_KEY']
+  knife[:linode_api_key] = ENV['LINODE_API_KEY']
+end
+
 # rackspace configuration
 if ENV['RACKSPACE_USERNAME'] && ENV['RACKSPACE_API_KEY']
   knife[:rackspace_api_username]  = ENV['RACKSPACE_USERNAME']

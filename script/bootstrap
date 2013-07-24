@@ -58,11 +58,16 @@ export AWS_AVAILABILITY_ZONE=""
 export AWS_FLAVOR=""
 export AWS_IMAGE=""
 
-export RACKSPACE_USERNAME=""
-export RACKSPACE_API_KEY=""
-
 export BLUEBOX_CUSTOMER_ID=""
 export BLUEBOX_API_KEY=""
+
+export DIGITAL_OCEAN_CLIENT_ID=""
+export DIGITAL_OCEAN_API_KEY=""
+
+export LINODE_API_KEY=""
+
+export RACKSPACE_USERNAME=""
+export RACKSPACE_API_KEY=""
 _END_OF_ENV
   fi
 
