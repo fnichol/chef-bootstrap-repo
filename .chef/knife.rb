@@ -41,17 +41,20 @@ cookbook_email            ENV['KNIFE_COOKBOOK_EMAIL'] ||
 cookbook_license          'apachev2'
 
 # aws ec2 configuration
-if ENV['AWS_AWS_ACCESS_KEY_ID'] && ENV['AWS_AWS_SECRET_ACCESS_KEY']
+if ENV['AWS_ACCESS_KEY'] && ENV['AWS_SECRET_KEY']
+  knife[:aws_access_key_id] = ENV['AWS_ACCESS_KEY']
+  knife[:aws_secret_access_key] = ENV['AWS_SECRET_KEY']
+
   ##
   # Searches the ENV hash for keys starting with "AWS_" and converts them
   # to knife config settings. For example:
   #
-  #     ENV['AWS_ACCESS_KEY_ID'] = "abcabc"
+  #     ENV['AWS_IMAGE'] = "abcabc"
   #     ENV['AWS_FLAVOR'] = "t1.small"
   #
   # becomes:
   #
-  #     knife[:access_key_id] = "abcabc"
+  #     knife[:image] = "abcabc"
   #     knife[:flavor] = "t1.small"
   aws_attrs = ENV.keys.select { |k| k =~ /^AWS_/ }
 
