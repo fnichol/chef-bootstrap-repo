@@ -88,6 +88,8 @@ _END_OF_ENVRC
     log "Trusting .envrc"
     direnv allow "$(dirname $0)/../.envrc"
   fi
+
+  log "Please edit $env_sh and re-run $0 to load new environment variables"
 fi
 
 if [ -f "$(dirname $0)/../Berksfile" ] ; then
