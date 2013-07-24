@@ -26,8 +26,8 @@ if ! command -v bundle >/dev/null ; then
   gem install bundler
 fi
 
-bundle_cmd="bundle install --path vendor/bundle --binstubs vendor/binstubs"
-banner "Running '$bundle_cmd'"
+bundle_cmd="bundle install --path vendor/bundle --binstubs bin"
+banner "Running Bundler with '$bundle_cmd'"
 $bundle_cmd
 
 if [ ! -f "$(dirname $0)/../.envrc" ] ; then
