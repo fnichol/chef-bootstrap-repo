@@ -36,7 +36,7 @@ if [ ! -f "$(dirname $0)/../.envrc" ] ; then
   printf "name> "
   read NAME
 
-  env_sh="$HOME/.chef.d/$NAME/env.sh"
+  env_sh="$HOME/.chef/$NAME/env.sh"
 
   if [ ! -d "$(dirname $env_sh)" ] ; then
     log "Creating $(dirname $env_sh) directory"
@@ -46,9 +46,9 @@ if [ ! -f "$(dirname $0)/../.envrc" ] ; then
   if [ ! -f "$env_sh" ] ; then
     log "Creating $env_sh (please edit afterwards)"
     cat <<_END_OF_ENV > "$env_sh"
-export KNIFE_CHEF_SERVER_URL=""
-export KNIFE_VALIDATION_KEY="\$HOME/.chef.d/$NAME/validation.pem"
-export KNIFE_CLIENT_KEY="\$HOME/.chef.d/$NAME/$USER.pem"
+export KNIFE_CHEF_SERVER_URL="https://$NAME"
+export KNIFE_VALIDATION_KEY="\$HOME/.chef/$NAME/validation.pem"
+export KNIFE_CLIENT_KEY="\$HOME/.chef/$NAME/$USER.pem"
 
 export AWS_ACCESS_KEY=""
 export AWS_SECRET_KEY=""
@@ -72,11 +72,11 @@ _END_OF_ENV
   fi
 
   cat <<_END_OF_ENVRC > "$(dirname $0)/../.envrc"
+PATH_add bin
 PATH_add script
-PATH_add vendor/binstubs
 
 # load knife config vars
-for config in \$HOME/.chef.d/$NAME/env.sh \$HOME/.chef.d/$NAME/env-*.sh ; do
+for config in \$HOME/.chef/$NAME/env.sh \$HOME/.chef/$NAME/env-*.sh ; do
   if [ -f "\$config" ] ; then
     echo "direnv: loading \$config"
     eval \$(cat \$config)
@@ -84,11 +84,31 @@ for config in \$HOME/.chef.d/$NAME/env.sh \$HOME/.chef.d/$NAME/env-*.sh ; do
 done ; unset config
 _END_OF_ENVRC
 
-  log "Loading .envrc"
-  touch "$(dirname $0)/../.envrc"
+  if command -v direnv >/dev/null ; then
+    log "Trusting .envrc"
+    direnv allow "$(dirname $0)/../.envrc"
+  fi
 fi
 
-banner "Running Berkshelf"
-"$(dirname $0)/../vendor/binstubs/berks" install
+if [ -f "$(dirname $0)/../Berksfile" ] ; then
+  resolver_bin="$(dirname $0)/../bin/berks"
+  resolver_args="install"
+  if [ ! -x "$resolver_bin" ] ; then
+    fail "Berkshelf gem is not in Gemfile, please add and re-run"
+  fi
+  banner "Running Berkshelf with '$(basename $resolver_bin) $resolver_args'"
+  $resolver_bin $resolver_args
+elif [ -f "$(dirname $0)/../Cheffile" ] ; then
+  resolver_bin="$(dirname $0)/../bin/librarian-chef"
+  resolver_args="install --path cookbooks"
+  if [ ! -x "$resolver_bin" ] ; then
+    fail "librarian-chef gem is not in Gemfile, please add and re-run"
+  fi
+  banner "Running Librarian-Chef with '$(basename $resolver_bin) $resolver_args'"
+  $resolver_bin $resolver_args
+fi
+
+banner "Loading .envrc"
+touch "$(dirname $0)/../.envrc"
 
 banner 'All ready!'
