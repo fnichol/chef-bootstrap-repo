@@ -16,10 +16,10 @@ Usage
 
 Options
 
-  --tmux, -t  - Run provisioning commands in parallel in tmux
+  --tmux,    -t   - Run provisioning commands in parallel in tmux
   --verbose, -v   - Outputs more information
   --dry-run, -n   - Outputs commands to be run, but not execute them
-  --help  - Display CLI help (this output)
+  --help          - Display CLI help (this output)
 
 "
 }
