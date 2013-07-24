@@ -4,7 +4,8 @@
 # KNIFE_VALIDATION_CLIENT_NAME  - validation client name, default is
 #                                 'chef-validator'
 #
-chef_dir = "#{ENV['HOME'] || ENV['HOMEDRIVE']}/.chef"
+chef_dir    = "#{ENV['HOME'] || ENV['HOMEDRIVE']}/.chef"
+current_dir = File.dirname(__FILE__)
 
 # chef server location and validation key
 chef_server_url           ENV['KNIFE_CHEF_SERVER_URL']
