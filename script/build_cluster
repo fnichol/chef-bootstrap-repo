@@ -85,19 +85,26 @@ fi
 
 in_tmux() {
   local instance=1
+  local tsession=$(basename ${CLUSTER%.yml})
+  unset TMUX
 
-  TMPDIR=/tmp tmux new-session -d -s $CLUSTER
+  TMPDIR=/tmp tmux new-session -d -s $tsession
 
-  spiceweasel --novalidation "$cluster_yml" | while read knife_command ; do
-    TMPDIR=/tmp tmux new-window -t $CLUSTER -n "knife-$instance" "bash"
-    TMPDIR=/tmp tmux send-keys \
-      -t $CLUSTER:$instance "time ($knife_command)" C-m
+  bundle exec spiceweasel --novalidation "$cluster_yml" | while read knife_command ; do
+    TMPDIR=/tmp tmux new-window -t $tsession -n "knife-$instance" "bash"
+    if [[ -n "$DRY_RUN" ]] ; then
+      TMPDIR=/tmp tmux send-keys \
+        -t $tsession:$instance "printf \"bundle exec $knife_command\n\"" C-m
+    else
+      TMPDIR=/tmp tmux send-keys \
+        -t $tsession:$instance "time (bundle exec $knife_command)" C-m
+    fi
     instance=$(($instance+1))
   done ; unset knife_command
 
-  TMPDIR=/tmp tmux kill-window -t $CLUSTER:0
-  TMPDIR=/tmp tmux select-window -t $CLUSTER:1
-  TMPDIR=/tmp tmux attach-session -t $CLUSTER
+  TMPDIR=/tmp tmux kill-window -t $tsession:0
+  TMPDIR=/tmp tmux select-window -t $tsession:1
+  TMPDIR=/tmp tmux attach-session -t $tsession
 }
 
 if [[ -n "$RUN_IN_TMUX" ]] ; then
